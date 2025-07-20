@@ -1,25 +1,33 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState } from 'react';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
+import Login from './components/Login';
+import Dashboard from './components/Dashboard';
 import './App.css';
+
+function AppContent() {
+  const { user } = useAuth();
+  const [isRegisterMode, setIsRegisterMode] = useState(false);
+
+  const toggleMode = () => {
+    setIsRegisterMode(!isRegisterMode);
+  };
+
+  if (user) {
+    return <Dashboard />;
+  }
+
+  return (
+    <Login onToggleMode={toggleMode} isRegisterMode={isRegisterMode} />
+  );
+}
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <AuthProvider>
+      <div className="App">
+        <AppContent />
+      </div>
+    </AuthProvider>
   );
 }
 
